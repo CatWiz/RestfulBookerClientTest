@@ -1,0 +1,23 @@
+Warning: KiotaBuilder OpenAPI warning: #/ - A servers entry (v3) or host + basePath + schemes properties (v2) was not present in the OpenAPI description. The root URL will need to be set manually with the request adapter.
+Warning: KiotaBuilder OpenAPI warning: #/paths/~1booking/get/parameters/2/examples/GET_INVALID_CHECKIN_DATE/value - Data and type mismatch found.
+Warning: KiotaBuilder OpenAPI warning: #/paths/~1booking/get/parameters/3/examples/GET_INVALID_CHECKIN_DATE/value - Data and type mismatch found.
+Warning: KiotaBuilder OpenAPI warning: #/paths/~1booking/post/requestBody/content/application~1json/examples/CREATE_BOOKING/value/bookingdates/checkin - Data and type mismatch found.
+Warning: KiotaBuilder OpenAPI warning: #/paths/~1booking/post/requestBody/content/application~1json/examples/CREATE_BOOKING/value/bookingdates/checkout - Data and type mismatch found.
+Warning: KiotaBuilder OpenAPI warning: #/paths/~1booking/post/responses/200/content/application~1json/examples/CREATE_BOOKING/value/booking/bookingdates/checkin - Data and type mismatch found.
+Warning: KiotaBuilder OpenAPI warning: #/paths/~1booking/post/responses/200/content/application~1json/examples/CREATE_BOOKING/value/booking/bookingdates/checkout - Data and type mismatch found.
+Warning: KiotaBuilder OpenAPI warning: #/paths/~1booking~1{id}/get/responses/200/content/application~1json/examples/GET_BOOKING/value/bookingdates/checkin - Data and type mismatch found.
+Warning: KiotaBuilder OpenAPI warning: #/paths/~1booking~1{id}/get/responses/200/content/application~1json/examples/GET_BOOKING/value/bookingdates/checkout - Data and type mismatch found.
+Warning: KiotaBuilder OpenAPI warning: #/paths/~1booking~1{id}/put/requestBody/content/application~1json/examples/UPDATE_BOOKING/value/bookingdates/checkin - Data and type mismatch found.
+Warning: KiotaBuilder OpenAPI warning: #/paths/~1booking~1{id}/put/requestBody/content/application~1json/examples/UPDATE_BOOKING/value/bookingdates/checkout - Data and type mismatch found.
+Warning: KiotaBuilder OpenAPI warning: #/paths/~1booking~1{id}/put/responses/200/content/application~1json/examples/UPDATE_BOOKING/value/bookingdates/checkin - Data and type mismatch found.
+Warning: KiotaBuilder OpenAPI warning: #/paths/~1booking~1{id}/put/responses/200/content/application~1json/examples/UPDATE_BOOKING/value/bookingdates/checkout - Data and type mismatch found.
+Warning: KiotaBuilder OpenAPI warning: #/paths/~1booking~1{id}/patch/requestBody/content/application~1json/examples/UPDATE_BOOKING/value/bookingdates/checkin - Data and type mismatch found.
+Warning: KiotaBuilder OpenAPI warning: #/paths/~1booking~1{id}/patch/requestBody/content/application~1json/examples/UPDATE_BOOKING/value/bookingdates/checkout - Data and type mismatch found.
+Warning: KiotaBuilder OpenAPI warning: #/paths/~1booking~1{id}/patch/responses/200/content/application~1json/examples/UPDATE_BOOKING/value/bookingdates/checkin - Data and type mismatch found.
+Warning: KiotaBuilder OpenAPI warning: #/paths/~1booking~1{id}/patch/responses/200/content/application~1json/examples/UPDATE_BOOKING/value/bookingdates/checkout - Data and type mismatch found.
+Warning: KiotaBuilder Could not create error type for 400 in (null)
+Warning: KiotaBuilder Could not create error type for 400 in (null)
+Warning: KiotaBuilder Could not create error type for 404 in (null)
+Warning: KiotaBuilder Could not create error type for 400 in (null)
+Warning: KiotaBuilder Could not create error type for 404 in (null)
+Warning: KiotaBuilder Could not create error type for 400 in (null)
