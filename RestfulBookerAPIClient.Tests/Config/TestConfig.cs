@@ -18,8 +18,8 @@ public static class TestConfig
 
     public static readonly AuthParams BadAuthParams = new()
     {
-        Username = GetConfigValue("BadAuth:Username"),
-        Password = GetConfigValue("BadAuth:Password")
+        Username = GetConfigValue("BadAuthUsername"),
+        Password = GetConfigValue("BadAuthPassword")
     };
     
     public static readonly AuthParams GoodAuthParams = new()
