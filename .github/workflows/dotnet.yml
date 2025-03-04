@@ -13,13 +13,22 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+        
     - name: Restore dependencies
       run: dotnet restore
+      
     - name: Build
       run: dotnet build --no-restore
+      
+    - name: Set secret environment variables
+      env:
+        GoodAuthUsername: ${{ secrets.AUTH_PASSWORD }}
+        GoodAuthPassword: ${{ secrets.AUTH_USERNAME }}
+      
     - name: Test
       run: dotnet test ./RestfulBookerAPIClient.Tests/RestfulBookerAPIClient.Tests.csproj --no-build --verbosity normal
