@@ -1,0 +1,1 @@
+﻿kiota generate -l CSharp -c RestfulBookerClient -n KiotaPosts.RestfulBookerClient -d ./OpenAPI/openapi.yaml -o ./Client
