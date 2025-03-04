@@ -7,7 +7,9 @@ info:
     url: https://github.com/texttest/restful-booker/blob/with_texttests/LICENSE
   version: 2.0.0
 servers:
-  - url: /
+  - url: https://restful-booker.herokuapp.com
+    description: The production API server
+  
 paths:
   /ping:
     get:
@@ -47,7 +49,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthResponse'
+                  $ref: '#/components/schemas/AuthResponse'
               examples:
                 AUTH:
                   value:
@@ -476,6 +478,9 @@ components:
       properties:
         token:
           type: string
+          nullable: true
         reason:
           type: string
+          nullable: true
+
 x-original-swagger-version: '2.0'
