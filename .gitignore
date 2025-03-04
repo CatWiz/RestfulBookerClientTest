@@ -34,3 +34,5 @@ Desktop.ini
 .DS_Store
 
 **/.kiota.log
+
+**/.env.local
