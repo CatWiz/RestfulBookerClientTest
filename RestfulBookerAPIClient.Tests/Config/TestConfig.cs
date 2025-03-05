@@ -8,6 +8,7 @@ public static class TestConfig
 {
     private static readonly IConfiguration Config = new ConfigurationBuilder()
         .AddJsonFile("appsettings.json")
+        .AddJsonFile("appsettings.local.json", optional: true) // optional for local development
         .AddEnvironmentVariables()
         .Build(); 
     

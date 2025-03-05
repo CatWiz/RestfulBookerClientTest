@@ -35,4 +35,4 @@ Desktop.ini
 
 **/.kiota.log
 
-**/.env.local
+**/appsettings.local.json
