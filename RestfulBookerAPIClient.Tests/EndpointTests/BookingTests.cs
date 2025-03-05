@@ -1,4 +1,5 @@
 ﻿using KiotaPosts.RestfulBookerClient;
+using Microsoft.Kiota.Abstractions;
 using RestfulBookerAPIClient.Tests.Fixtures;
 
 namespace RestfulBookerAPIClient.Tests.PingTests;
@@ -38,5 +39,16 @@ public class BookingTests
         Assert.NotNull(booking.Bookingdates);
         Assert.NotNull(booking.Bookingdates.Checkin);
         Assert.NotNull(booking.Bookingdates.Checkout);
+    }
+    
+    [Fact]
+    public async Task GetBookingByNonExistentIdReturnsNull()
+    {
+        var exception = await Assert.ThrowsAsync<ApiException>( async () =>
+        {
+            var booking = await _client.Booking[-1].GetAsync();       
+        });
+        
+        Assert.Equal(404, exception.ResponseStatusCode);
     }
 }
