@@ -1,5 +1,6 @@
 ﻿using KiotaPosts.RestfulBookerClient;
 using KiotaPosts.RestfulBookerClient.Models;
+using RestfulBookerAPIClient.Tests.Fixtures;
 
 namespace RestfulBookerAPIClient.Tests.PingTests;
 
