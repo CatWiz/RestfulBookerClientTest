@@ -1,4 +1,5 @@
 ﻿using KiotaPosts.RestfulBookerClient;
+using KiotaPosts.RestfulBookerClient.Models;
 using Microsoft.Kiota.Abstractions;
 using RestfulBookerAPIClient.Tests.Fixtures;
 
@@ -50,5 +51,54 @@ public class BookingTests
         });
         
         Assert.Equal(404, exception.ResponseStatusCode);
+    }
+    
+    [Fact]
+    public async Task CreateBookingReturnsOk()
+    {
+        var booking = new Booking()
+        {
+            Firstname = "John",
+            Lastname = "Doe",
+            Totalprice = 100,
+            Depositpaid = true,
+            Additionalneeds = "Breakfast",
+            Bookingdates = new Booking_bookingdates()
+            {
+                Checkin = new Date(2024, 12, 27),
+                Checkout = new Date(2025, 1, 3)
+            },
+        };
+        
+        var response = await _client.Booking.PostAsync(booking);
+        
+        Assert.NotNull(response);
+        Assert.NotNull(response.Bookingid);
+    }
+    
+    [Fact]
+    public async Task CreateBookingWithInvalidDatesReturnsBadRequest()
+    {
+        var booking = new Booking()
+        {
+            // Skip some required fields
+            // Firstname = "John",
+            // Lastname = "Doe",
+            Totalprice = 100,
+            Depositpaid = true,
+            Additionalneeds = "Breakfast",
+            Bookingdates = new Booking_bookingdates()
+            {
+                Checkin = new Date(2024, 12, 27),
+                Checkout = new Date(2024, 12, 26)
+            },
+        };
+        
+        var exception = await Assert.ThrowsAsync<ApiException>( async () =>
+        {
+            var response = await _client.Booking.PostAsync(booking);
+        });
+        
+        Assert.Equal(400, exception.ResponseStatusCode);
     }
 }
