@@ -2,7 +2,7 @@
 using Microsoft.Kiota.Abstractions;
 using RestfulBookerAPIClient.Tests.Fixtures;
 
-namespace RestfulBookerAPIClient.Tests.PingTests;
+namespace RestfulBookerAPIClient.Tests.BookingTests;
 
 [Collection("ApiClient")]
 public class BookingTests

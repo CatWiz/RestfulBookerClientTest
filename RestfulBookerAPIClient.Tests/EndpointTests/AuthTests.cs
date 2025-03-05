@@ -2,7 +2,7 @@
 using KiotaPosts.RestfulBookerClient.Models;
 using RestfulBookerAPIClient.Tests.Fixtures;
 
-namespace RestfulBookerAPIClient.Tests.PingTests;
+namespace RestfulBookerAPIClient.Tests.AuthTests;
 
 [Collection("ApiClient")]
 public class AuthTests
