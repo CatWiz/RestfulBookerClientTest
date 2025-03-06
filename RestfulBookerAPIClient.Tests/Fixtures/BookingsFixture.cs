@@ -50,7 +50,33 @@ public class BookingsFixture
             Checkout = new Date(2025, 1, 3)
         },
     };
-
+    
+    // Booking with some fields missing that's distinct from BadBooking
+    // This is used to test the PUT
+    public readonly Booking BadUpdateBooking = new()
+    {
+        Firstname = "Vasyl",
+        // Lastname = "Petrenko",
+        // Totalprice = 47,
+        Depositpaid = true,
+        Additionalneeds = "Many",
+        Bookingdates = new Booking_bookingdates()
+        {
+            Checkin = new Date(2024, 12, 27),
+            Checkout = new Date(2025, 1, 3)
+        },
+    };
+    
+    public readonly Booking GoodPartialUpdateBooking = new()
+    {
+        Firstname = "Vasyl",
+        Additionalneeds = "Many",
+        Bookingdates = new Booking_bookingdates()
+        {
+            Checkin = new Date(2024, 12, 27),
+            Checkout = new Date(2025, 1, 3)
+        },
+    };
 }
 
 [CollectionDefinition("BookingTests")]

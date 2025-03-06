@@ -294,6 +294,12 @@ paths:
             text/plain:
               schema:
                 type: string
+        '405':
+          description: Not allowed, returned when the booking id does not exist
+          content:
+              text/plain:
+                schema:
+                    type: string
       x-codegen-request-body-name: body
     delete:
       summary: Delete a booking
@@ -333,15 +339,12 @@ paths:
               examples:
                 DELETE_BOOKING:
                   value: Deleted
-        '404':
-          description: booking not found
+        '405':
+          description: Not allowed, returned when the booking id does not exist
           content:
             text/plain:
               schema:
                 type: string
-              examples:
-                DELETE_INVALID_BOOKING_ID:
-                  value: Invalid ID supplied
     patch:
       summary: Partially update a booking
       description: Partially update a booking
@@ -404,6 +407,12 @@ paths:
                     additionalneeds: Breakfast
         '400':
           description: invalid request
+          content:
+            text/plain:
+              schema:
+                type: string
+        '405':
+          description: Not allowed, returned when the booking id does not exist
           content:
             text/plain:
               schema:

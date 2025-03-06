@@ -100,4 +100,87 @@ public class BookingTests
         Assert.Equal(newBooking.Bookingdates?.Checkin, response.Bookingdates.Checkin);
         Assert.Equal(newBooking.Bookingdates?.Checkout, response.Bookingdates.Checkout);
     }
+    
+    [Fact]
+    public async Task UpdateNonExistentBookingReturnsNotAllowed()
+    {
+        var newBooking = _bookingsFixture.GoodUpdateBooking;
+        
+        var exception = await Assert.ThrowsAsync<ApiException>(async () =>
+        {
+            var response = await _client.Booking[-1].PutAsync(newBooking);
+        });
+
+        Assert.Equal(405, exception.ResponseStatusCode);
+    }
+
+    [Fact]
+    public async Task UpdateBookingWithInvalidDataReturnsBadRequest()
+    {
+        var newBooking = _bookingsFixture.BadUpdateBooking;
+        
+        var exception = await Assert.ThrowsAsync<ApiException>(async () =>
+        {
+            var response = await _client.Booking[1].PutAsync(newBooking);
+        });
+        
+        Assert.Equal(400, exception.ResponseStatusCode);
+    }
+    
+    [Fact]
+    public async Task DeleteBookingRunsOk()
+    {
+        var bookingsList = await _client.Booking.GetAsync();
+        var bookingId = bookingsList?.First().Bookingid;
+        Assert.NotNull(bookingId);
+        
+        var response = await _client.Booking[(int)bookingId].DeleteAsync();
+        
+        Assert.NotNull(response);
+        Assert.Equal("Created", response);
+    }
+    
+    [Fact]
+    public async Task DeleteNonExistentBookingReturnsNotAllowed()
+    {
+        var exception = await Assert.ThrowsAsync<ApiException>(async () =>
+        {
+            var response = await _client.Booking[-1].DeleteAsync();
+        });
+
+        Assert.Equal(405, exception.ResponseStatusCode);
+    }
+
+    [Fact]
+    public async Task PartialUpdateBookingRunsOk()
+    {
+        var bookingsList = await _client.Booking.GetAsync();
+        var bookingId = bookingsList?.First().Bookingid;
+        Assert.NotNull(bookingId);
+
+        var bookingPatch = _bookingsFixture.GoodPartialUpdateBooking;
+        var response = await _client.Booking[(int)bookingId].PatchAsync(bookingPatch);
+        
+        Assert.NotNull(response);
+        Assert.True(bookingPatch.Firstname is null || bookingPatch.Firstname == response.Firstname);
+        Assert.True(bookingPatch.Lastname is null || bookingPatch.Lastname == response.Lastname);
+        Assert.True(bookingPatch.Totalprice is null || bookingPatch.Totalprice == response.Totalprice);
+        Assert.True(bookingPatch.Depositpaid is null || bookingPatch.Depositpaid == response.Depositpaid);
+        Assert.True(bookingPatch.Additionalneeds is null || bookingPatch.Additionalneeds == response.Additionalneeds);
+        Assert.True(bookingPatch.Bookingdates?.Checkin is null ||  bookingPatch.Bookingdates.Checkin.Equals(response.Bookingdates?.Checkin));
+        Assert.True(bookingPatch.Bookingdates?.Checkout is null || bookingPatch.Bookingdates.Checkout.Equals(response.Bookingdates?.Checkout));
+    }
+    
+    [Fact]
+    public async Task PartialUpdateNonExistentBookingReturnsNotAllowed()
+    {
+        var bookingPatch = _bookingsFixture.GoodPartialUpdateBooking;
+        
+        var exception = await Assert.ThrowsAsync<ApiException>(async () =>
+        {
+            var response = await _client.Booking[-1].PatchAsync(bookingPatch);
+        });
+
+        Assert.Equal(405, exception.ResponseStatusCode);
+    }
 }
