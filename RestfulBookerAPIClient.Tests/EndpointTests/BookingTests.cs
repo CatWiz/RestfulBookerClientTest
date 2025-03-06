@@ -5,14 +5,16 @@ using RestfulBookerAPIClient.Tests.Fixtures;
 
 namespace RestfulBookerAPIClient.Tests.BookingTests;
 
-[Collection("ApiClient")]
+[Collection("BookingTests")]
 public class BookingTests
 {
     private readonly RestfulBookerClient _client;
+    private readonly BookingsFixture _bookingsFixture;
 
-    public BookingTests(ApiClientFixture fixture)
+    public BookingTests(ApiClientFixture fixture, BookingsFixture bookingsFixture)
     {
         _client = fixture.Client;
+        _bookingsFixture = bookingsFixture;
     }
 
     [Fact]
@@ -56,19 +58,7 @@ public class BookingTests
     [Fact]
     public async Task CreateBookingReturnsOk()
     {
-        var booking = new Booking()
-        {
-            Firstname = "John",
-            Lastname = "Doe",
-            Totalprice = 100,
-            Depositpaid = true,
-            Additionalneeds = "Breakfast",
-            Bookingdates = new Booking_bookingdates()
-            {
-                Checkin = new Date(2024, 12, 27),
-                Checkout = new Date(2025, 1, 3)
-            },
-        };
+        var booking = _bookingsFixture.GoodBooking; 
 
         var response = await _client.Booking.PostAsync(booking);
 
@@ -79,20 +69,7 @@ public class BookingTests
     [Fact]
     public async Task CreateBookingWithInvalidDatesReturnsBadRequest()
     {
-        var booking = new Booking()
-        {
-            // Skip some required fields
-            // Firstname = "John",
-            // Lastname = "Doe",
-            Totalprice = 100,
-            Depositpaid = true,
-            Additionalneeds = "Breakfast",
-            Bookingdates = new Booking_bookingdates()
-            {
-                Checkin = new Date(2024, 12, 27),
-                Checkout = new Date(2024, 12, 26)
-            },
-        };
+        var booking = _bookingsFixture.BadBooking;
 
         var exception = await Assert.ThrowsAsync<ApiException>(async () =>
         {
@@ -105,20 +82,8 @@ public class BookingTests
     [Fact]
     public async Task UpdateBookingRunsOk()
     {
-        var newBooking = new Booking()
-        {
-            Firstname = "Vasyl",
-            Lastname = "Petrenko",
-            Totalprice = 100,
-            Depositpaid = true,
-            Additionalneeds = "Dinner",
-            Bookingdates = new Booking_bookingdates()
-            {
-                Checkin = new Date(2024, 12, 27),
-                Checkout = new Date(2025, 1, 3)
-            },
-        };
-        
+        var newBooking = _bookingsFixture.GoodUpdateBooking;
+            
         var bookingsList = await _client.Booking.GetAsync();
         var bookingId = bookingsList?.First().Bookingid;
         Assert.NotNull(bookingId);
@@ -132,9 +97,7 @@ public class BookingTests
         Assert.Equal(newBooking.Depositpaid, response.Depositpaid);
         Assert.Equal(newBooking.Additionalneeds, response.Additionalneeds);
         Assert.NotNull(response.Bookingdates);
-        Assert.Equal(newBooking.Bookingdates.Checkin, response.Bookingdates.Checkin);
-        Assert.Equal(newBooking.Bookingdates.Checkout, response.Bookingdates.Checkout);
-        
+        Assert.Equal(newBooking.Bookingdates?.Checkin, response.Bookingdates.Checkin);
+        Assert.Equal(newBooking.Bookingdates?.Checkout, response.Bookingdates.Checkout);
     }
-
 }
