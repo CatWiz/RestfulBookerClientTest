@@ -1,7 +1,7 @@
 ﻿openapi: 3.0.1
 info:
   title: Restful booker
-  description: An API for practising your testing skills
+  description: An API for practising your testing skills. Modified to match behavior of Restful Booker hosted on Heroku.
   license:
     name: 'License: GNU GPL'
     url: https://github.com/texttest/restful-booker/blob/with_texttests/LICENSE
@@ -178,8 +178,8 @@ paths:
                         checkin: 2018-01-01
                         checkout: 2019-01-01
                       additionalneeds: Breakfast
-        '400':
-          description: invalid request
+        '500':
+          description: Server has an error when processing incomplete data
           content:
             text/plain:
               schema:

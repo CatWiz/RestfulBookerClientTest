@@ -15,7 +15,7 @@ Warning: KiotaBuilder OpenAPI warning: #/paths/~1booking~1{id}/patch/requestBody
 Warning: KiotaBuilder OpenAPI warning: #/paths/~1booking~1{id}/patch/responses/200/content/application~1json/examples/UPDATE_BOOKING/value/bookingdates/checkin - Data and type mismatch found.
 Warning: KiotaBuilder OpenAPI warning: #/paths/~1booking~1{id}/patch/responses/200/content/application~1json/examples/UPDATE_BOOKING/value/bookingdates/checkout - Data and type mismatch found.
 Warning: KiotaBuilder Could not create error type for 400 in (null)
-Warning: KiotaBuilder Could not create error type for 400 in (null)
+Warning: KiotaBuilder Could not create error type for 500 in (null)
 Warning: KiotaBuilder Could not create error type for 404 in (null)
 Warning: KiotaBuilder Could not create error type for 400 in (null)
 Warning: KiotaBuilder Could not create error type for 404 in (null)

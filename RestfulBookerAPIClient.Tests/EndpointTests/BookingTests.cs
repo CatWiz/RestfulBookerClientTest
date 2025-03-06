@@ -99,6 +99,6 @@ public class BookingTests
             var response = await _client.Booking.PostAsync(booking);
         });
         
-        Assert.Equal(400, exception.ResponseStatusCode);
+        Assert.Equal(500, exception.ResponseStatusCode);
     }
 }
