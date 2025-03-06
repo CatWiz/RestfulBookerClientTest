@@ -16,6 +16,7 @@ public static class TestConfig
                                                         ?? throw new ConfigurationErrorsException($"{key} is not set in the configuration file");
 
     public static readonly string BaseUrl = GetConfigValue("BaseUrl");
+    public static readonly string BaseHost = new Uri(BaseUrl).Host;
 
     public static readonly AuthParams BadAuthParams = new()
     {

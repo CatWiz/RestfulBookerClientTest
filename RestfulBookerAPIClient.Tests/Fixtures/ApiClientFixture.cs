@@ -1,6 +1,6 @@
 using KiotaPosts.RestfulBookerClient;
-using Microsoft.Kiota.Abstractions.Authentication;
 using Microsoft.Kiota.Http.HttpClientLibrary;
+using ReqresAPITest.Auth;
 
 namespace RestfulBookerAPIClient.Tests.Fixtures;
 
@@ -10,7 +10,8 @@ public class ApiClientFixture
     
     public ApiClientFixture()
     {
-        var authProvider = new AnonymousAuthenticationProvider();
+        var tokenProvider = new RestfulBookerAccessTokenProvider(TestConfig.BaseUrl, TestConfig.GoodAuthParams);
+        var authProvider = new RestfulBookerAuthenticationProvider(tokenProvider);
         var adapter = new HttpClientRequestAdapter(authProvider);
         adapter.BaseUrl = TestConfig.BaseUrl;
         Client = new RestfulBookerClient(adapter);
