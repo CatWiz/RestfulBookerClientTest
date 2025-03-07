@@ -1,7 +1,7 @@
 ﻿using Microsoft.Kiota.Abstractions;
 using Microsoft.Kiota.Abstractions.Authentication;
 
-namespace ReqresAPITest.Auth;
+namespace RestfulBookerAPIClient.Auth;
 
 public class RestfulBookerAuthenticationProvider : IAuthenticationProvider
 {

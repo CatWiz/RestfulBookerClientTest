@@ -7,7 +7,7 @@
 
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
-        <RootNamespace>ReqresAPIUtil.Tests</RootNamespace>
+        <RootNamespace>RestfulBookerAPIClient.Tests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

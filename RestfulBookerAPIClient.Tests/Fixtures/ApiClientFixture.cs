@@ -1,6 +1,6 @@
 using KiotaPosts.RestfulBookerClient;
 using Microsoft.Kiota.Http.HttpClientLibrary;
-using ReqresAPITest.Auth;
+using RestfulBookerAPIClient.Auth;
 
 namespace RestfulBookerAPIClient.Tests.Fixtures;
 
