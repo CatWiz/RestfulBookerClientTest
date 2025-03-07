@@ -1,4 +1,5 @@
-﻿using KiotaPosts.RestfulBookerClient;
+﻿using FluentAssertions;
+using KiotaPosts.RestfulBookerClient;
 using RestfulBookerAPIClient.Tests.Fixtures;
 
 namespace RestfulBookerAPIClient.Tests.PingTests;
@@ -16,8 +17,8 @@ public class RestfulBookerClientPingTests
     [Fact]
     public async Task PingRunsOk()
     {
-        string? response = await _client.Ping.GetAsync();
+        var response = await _client.Ping.GetAsync();
 
-        Assert.NotNull(response);
+        response.Should().NotBeNull();
     }
 }
