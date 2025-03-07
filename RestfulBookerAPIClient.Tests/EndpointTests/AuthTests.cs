@@ -1,6 +1,7 @@
 ﻿using KiotaPosts.RestfulBookerClient;
 using KiotaPosts.RestfulBookerClient.Models;
 using RestfulBookerAPIClient.Tests.Fixtures;
+using FluentAssertions;
 
 namespace RestfulBookerAPIClient.Tests.AuthTests;
 
@@ -17,27 +18,27 @@ public class AuthTests
     [Fact]
     private async Task AuthWithBadCredentialsFails() {
         var response = await _client.Auth.PostAsync(TestConfig.BadAuthParams);
-     
-        Assert.NotNull(response);
-        Assert.Null(response.Token);
-        Assert.NotNull(response.Reason);
+
+        response.Should().NotBeNull();
+        response.Token.Should().BeNull("because the credentials are invalid");
+        response.Reason.Should().NotBeNullOrEmpty("because the credentials are invalid");
     }
     
     [Fact]
     private async Task AuthWithGoodCredentialsSucceeds() {
         var response = await _client.Auth.PostAsync(TestConfig.GoodAuthParams);
         
-        Assert.NotNull(response);
-        Assert.NotNull(response.Token);
-        Assert.Null(response.Reason);
+        response.Should().NotBeNull();
+        response.Token.Should().NotBeNullOrEmpty("because the credentials are valid");
+        response.Reason.Should().BeNullOrEmpty("because the credentials are valid");
     }
     
     [Fact]
     private async Task AuthWithEmptyCredentialsFails() {
         var response = await _client.Auth.PostAsync(new AuthParams());
         
-        Assert.NotNull(response);
-        Assert.Null(response.Token);
-        Assert.NotNull(response.Reason);
+        response.Should().NotBeNull();
+        response.Token.Should().BeNull("because the credentials are empty");
+        response.Reason.Should().NotBeNullOrEmpty("because the credentials are empty");
     }
 }
