@@ -2,6 +2,8 @@
 using KiotaPosts.RestfulBookerClient.Models;
 using Microsoft.Kiota.Abstractions;
 using RestfulBookerAPIClient.Tests.Fixtures;
+using FluentAssertions;
+using System.Reflection;
 
 namespace RestfulBookerAPIClient.Tests.BookingTests;
 
@@ -22,37 +24,44 @@ public class BookingTests
     {
         var bookingsList = await _client.Booking.GetAsync();
 
-        Assert.NotNull(bookingsList);
-        Assert.NotEmpty(bookingsList);
-        Assert.NotNull(bookingsList.First().Bookingid);
+        bookingsList.Should().NotBeNullOrEmpty("because there should be bookings available");
+        bookingsList.Should().AllSatisfy(bookingData =>
+        {
+            bookingData.Bookingid.Should().NotBeNull("because all bookings should have an id");
+        });
     }
-
+    
+    private int GetRandomBookingId()
+    {
+        var bookingsList = _client.Booking.GetAsync().Result;
+        var randomBooking = bookingsList?.First().Bookingid;
+        randomBooking.Should().NotBeNull("because there should be at least one booking available");
+        
+        return (int)randomBooking;
+    }
+    
     [Fact]
     public async Task GetBookingByIdReturnsOk()
     {
-        var bookingsList = await _client.Booking.GetAsync();
-        var bookingId = bookingsList?.First().Bookingid;
-        Assert.NotNull(bookingId);
-
+        var bookingId = GetRandomBookingId();
         var booking = await _client.Booking[(int)bookingId].GetAsync();
 
-        Assert.NotNull(booking);
-        Assert.NotNull(booking.Firstname);
-        Assert.NotNull(booking.Lastname);
-        Assert.NotNull(booking.Bookingdates);
-        Assert.NotNull(booking.Bookingdates.Checkin);
-        Assert.NotNull(booking.Bookingdates.Checkout);
+        booking.Should().NotBeNull("because the client should return a booking");
+        booking.Firstname.Should().NotBeNullOrEmpty("because the booking should have a first name");
+        booking.Lastname.Should().NotBeNullOrEmpty("because the booking should have a last name");
+        booking.Totalprice.Should().NotBeNull("because the booking should have a total price");
+        booking.Depositpaid.Should().NotBeNull("because the booking should have a deposit paid status");
+        booking.Bookingdates.Should().NotBeNull("because the booking should have booking dates");
+        booking.Bookingdates.Checkin.Should().NotBeNull("because the booking should have a check-in date");
+        booking.Bookingdates.Checkout.Should().NotBeNull("because the booking should have a check-out date");
     }
 
     [Fact]
     public async Task GetBookingByNonExistentIdReturnsNull()
     {
-        var exception = await Assert.ThrowsAsync<ApiException>(async () =>
-        {
-            var booking = await _client.Booking[-1].GetAsync();
-        });
-
-        Assert.Equal(404, exception.ResponseStatusCode);
+        await _client.Invoking(async x => await x.Booking[-1].GetAsync())
+            .Should().ThrowAsync<ApiException>("because the booking id does not exist")
+            .Where(e => e.ResponseStatusCode == 404, "because the error code should be NOT FOUND");
     }
 
     [Fact]
@@ -62,8 +71,8 @@ public class BookingTests
 
         var response = await _client.Booking.PostAsync(booking);
 
-        Assert.NotNull(response);
-        Assert.NotNull(response.Bookingid);
+        response.Should().NotBeNull();
+        response.Bookingid.Should().NotBeNull("because the client should return a booking id");
     }
 
     [Fact]
@@ -71,47 +80,30 @@ public class BookingTests
     {
         var booking = _bookingsFixture.BadBooking;
 
-        var exception = await Assert.ThrowsAsync<ApiException>(async () =>
-        {
-            var response = await _client.Booking.PostAsync(booking);
-        });
-
-        Assert.Equal(500, exception.ResponseStatusCode);
+        await _client.Invoking(async x => await x.Booking.PostAsync(booking))
+            .Should().ThrowAsync<ApiException>("because given booking data is invalid")
+            .Where(e => e.ResponseStatusCode == 500, "because the expected error code is INTERNAL SERVER ERROR");
     }
 
     [Fact]
     public async Task UpdateBookingRunsOk()
     {
         var newBooking = _bookingsFixture.GoodUpdateBooking;
-            
-        var bookingsList = await _client.Booking.GetAsync();
-        var bookingId = bookingsList?.First().Bookingid;
-        Assert.NotNull(bookingId);
+        var bookingId = GetRandomBookingId();
         
-        var response = await _client.Booking[(int)bookingId].PutAsync(newBooking);
+        var response = await _client.Booking[bookingId].PutAsync(newBooking);
         
-        Assert.NotNull(response);
-        Assert.Equal(newBooking.Firstname, response.Firstname);
-        Assert.Equal(newBooking.Lastname, response.Lastname);
-        Assert.Equal(newBooking.Totalprice, response.Totalprice);
-        Assert.Equal(newBooking.Depositpaid, response.Depositpaid);
-        Assert.Equal(newBooking.Additionalneeds, response.Additionalneeds);
-        Assert.NotNull(response.Bookingdates);
-        Assert.Equal(newBooking.Bookingdates?.Checkin, response.Bookingdates.Checkin);
-        Assert.Equal(newBooking.Bookingdates?.Checkout, response.Bookingdates.Checkout);
+        response.Should().NotBeNull();
+        response.Should().BeEquivalentTo(newBooking, "because the updated booking should be same as passed data");
     }
     
     [Fact]
     public async Task UpdateNonExistentBookingReturnsNotAllowed()
     {
         var newBooking = _bookingsFixture.GoodUpdateBooking;
-        
-        var exception = await Assert.ThrowsAsync<ApiException>(async () =>
-        {
-            var response = await _client.Booking[-1].PutAsync(newBooking);
-        });
-
-        Assert.Equal(405, exception.ResponseStatusCode);
+        await _client.Invoking(async x => await x.Booking[-1].PutAsync(newBooking))
+            .Should().ThrowAsync<ApiException>("because the booking id does not exist")
+            .Where(e => e.ResponseStatusCode == 405, "because the expected error code is METHOD NOT ALLOWED");
     }
 
     [Fact]
@@ -119,68 +111,56 @@ public class BookingTests
     {
         var newBooking = _bookingsFixture.BadUpdateBooking;
         
-        var exception = await Assert.ThrowsAsync<ApiException>(async () =>
-        {
-            var response = await _client.Booking[1].PutAsync(newBooking);
-        });
-        
-        Assert.Equal(400, exception.ResponseStatusCode);
+        await _client.Invoking(async x => await x.Booking[1].PutAsync(newBooking))
+            .Should().ThrowAsync<ApiException>("because given booking data is invalid")
+            .Where(e => e.ResponseStatusCode == 400, "because the error code should be BAD REQUEST");
     }
     
     [Fact]
     public async Task DeleteBookingRunsOk()
     {
-        var bookingsList = await _client.Booking.GetAsync();
-        var bookingId = bookingsList?.First().Bookingid;
-        Assert.NotNull(bookingId);
+        var bookingId = GetRandomBookingId();
         
-        var response = await _client.Booking[(int)bookingId].DeleteAsync();
+        var response = await _client.Booking[bookingId].DeleteAsync();
         
-        Assert.NotNull(response);
-        Assert.Equal("Created", response);
+        response.Should().NotBeNull();
+        response.Should().Be("Created", "because that is the expected response from the server");
     }
     
     [Fact]
     public async Task DeleteNonExistentBookingReturnsNotAllowed()
     {
-        var exception = await Assert.ThrowsAsync<ApiException>(async () =>
-        {
-            var response = await _client.Booking[-1].DeleteAsync();
-        });
-
-        Assert.Equal(405, exception.ResponseStatusCode);
+        await _client.Invoking(x => x.Booking[-1].DeleteAsync())
+            .Should().ThrowAsync<ApiException>("because the booking does not exist")
+            .Where(e => e.ResponseStatusCode == 405, "because the expected error code is METHOD NOT ALLOWED");
     }
 
     [Fact]
     public async Task PartialUpdateBookingRunsOk()
     {
-        var bookingsList = await _client.Booking.GetAsync();
-        var bookingId = bookingsList?.First().Bookingid;
-        Assert.NotNull(bookingId);
+        var bookingId = GetRandomBookingId();
 
         var bookingPatch = _bookingsFixture.GoodPartialUpdateBooking;
-        var response = await _client.Booking[(int)bookingId].PatchAsync(bookingPatch);
-        
-        Assert.NotNull(response);
-        Assert.True(bookingPatch.Firstname is null || bookingPatch.Firstname == response.Firstname);
-        Assert.True(bookingPatch.Lastname is null || bookingPatch.Lastname == response.Lastname);
-        Assert.True(bookingPatch.Totalprice is null || bookingPatch.Totalprice == response.Totalprice);
-        Assert.True(bookingPatch.Depositpaid is null || bookingPatch.Depositpaid == response.Depositpaid);
-        Assert.True(bookingPatch.Additionalneeds is null || bookingPatch.Additionalneeds == response.Additionalneeds);
-        Assert.True(bookingPatch.Bookingdates?.Checkin is null ||  bookingPatch.Bookingdates.Checkin.Equals(response.Bookingdates?.Checkin));
-        Assert.True(bookingPatch.Bookingdates?.Checkout is null || bookingPatch.Bookingdates.Checkout.Equals(response.Bookingdates?.Checkout));
+        var response = await _client.Booking[bookingId].PatchAsync(bookingPatch);
+
+        response.Should().NotBeNull();
+        foreach (var property in bookingPatch.GetType().GetProperties())
+        {
+            var patchValue = property.GetValue(bookingPatch);
+            if (patchValue is null) continue;
+            
+            var subjectValue = property.GetValue(response);
+            subjectValue.Should().BeEquivalentTo(patchValue, "because the updated booking should have the same values as the patch");
+        }
     }
-    
+
     [Fact]
     public async Task PartialUpdateNonExistentBookingReturnsNotAllowed()
     {
         var bookingPatch = _bookingsFixture.GoodPartialUpdateBooking;
         
-        var exception = await Assert.ThrowsAsync<ApiException>(async () =>
-        {
-            var response = await _client.Booking[-1].PatchAsync(bookingPatch);
-        });
-
-        Assert.Equal(405, exception.ResponseStatusCode);
+        await _client.Invoking(x => x.Booking[-1].PatchAsync(bookingPatch))
+            .Should().ThrowAsync<ApiException>()
+            .Where(e => e.ResponseStatusCode == 405, "because the expected error code is METHOD NOT ALLOWED");
     }
 }
